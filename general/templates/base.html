@@ -1,0 +1,134 @@
+{% load static %}
+{% load lucide %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Piano Dude{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <!-- Подключение Swiper из CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="{% static "dependencies/css/output.css" %}">   
+    <link rel="stylesheet" href="{% static "dependencies/css/AnimForm.css" %}">   
+    <link rel="stylesheet" href="{% static "dependencies/css/animNewsLenta.css" %}">   
+  </head>
+  <body class="font-roboto">
+    <div class="mx-auto font-sans bg-gray-100" style="font-family: 'Roboto', sans-serif;">
+      
+      {% comment %} Header {% endcomment %}
+      <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all bg-white/50 backdrop-blur-md text-black py-3 shadow-none">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <a href="/" class="flex items-center hover:text-[#008080]">
+            <i class="#">
+              {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
+            </i>
+            <h1 class="text-3xl">PianoDude</h1>
+          </a>
+
+          <nav class="relative" x-data="{ open: null }">
+            <ul class="flex space-x-8 text-[17px]">
+              {% if not user.is_authenticated %}
+                <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
+                <li><a href="{% url 'general:register' %}" class="hover:text-[#008080]">Регистрация</a></li>
+              {% else %}
+                <li><a href="{% url 'general:logout' %}" class="hover:text-[#008080]">Выход</a></li>
+                {% if user.is_superuser %}
+                  <li><a href="{% url 'general:panel_admin' %}" class="hover:text-[#008080]">Панель админа</a></li>
+                {% else %}
+                  <li><a href="{% url 'general:account' %}" class="hover:text-[#008080]">Личный кабинет</a></li>
+                {% endif %}
+              {% endif %}
+          
+              {% for item in menu_items %}
+                <li class="relative" @mouseenter="open = '{{ item.label.name }}'" @mouseleave="open = null">
+                  <a href="{{ item.label.path }}" class="hover:text-[#008080]">{{ item.label.name }}</a>
+                  {% if item.links %}
+                    <div 
+                      x-show="open === '{{ item.label.name }}'" 
+                      x-transition 
+                      class="absolute left-0 mt-2 w-[220px] bg-white/90 shadow-lg z-20 rounded-lg"
+                    >
+                      <ul class="flex flex-col p-4 space-y-2">
+                        {% for link in item.links %}
+                          <li>
+                            <a href="{{ link.path }}" class="hover:underline">{{ link.name }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                </li>
+              {% endfor %}
+          
+              <li>
+                <a href="/ShopingCarting" class="hover:text-[#008080]">
+                  {% lucide 'shopping-cart' size=40 class="h-6 w-6" %}
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      <main class="#">{% block content %}{% endblock %}</main>
+
+      {% comment %} Footer {% endcomment %}
+      <footer class="bg-gradient-to-r from-[#008080] to-[#00b3b3] py-12 px-6 text-white">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-6">
+          <!-- Левая часть -->
+          <div class="w-full md:w-1/3 space-y-6">
+            <div class="flex items-center space-x-2">
+              <i class="w-6 h-6">
+                {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
+              </i>
+              <h1 class="text-3xl font-bold">PianoDude</h1>
+            </div>
+
+            <div class="space-y-2">
+              <p>+7 (999) 999-999-9</p>
+              <p>dude@gmail.com</p>
+              <p class="font-semibold">Время работы:</p>
+              <p>пн–пт 08:00–20:00, вых 10:00–19:00</p>
+              <a href="#" class="text-blue-200 hover:underline">Заказать обратный звонок</a>
+
+              <p class="font-semibold mt-4">Оставайтесь на связи:</p>
+              <div class="flex items-center space-x-3">
+                <i class="w-6 h-6">
+                  {% lucide 'dribbble' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
+                </i>
+                <i class="w-6 h-6">
+                  {% lucide 'accessibility' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
+                </i>
+                <i class="w-6 h-6">
+                  {% lucide 'handshake' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
+                </i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая часть: ссылки -->
+          <div class="w-full md:w-2/3 flex flex-wrap justify-between gap-6">
+            {% for category, links in footer_links.items %}
+              <div class="space-y-4 min-w-[140px]">
+                <h2 class="text-lg font-semibold">{{ category }}</h2>
+                {% for link in links %}
+                  <a href="#" class="block hover:text-blue-200 transition-colors" aria-label="{{ link }}">{{ link }}</a>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="text-center mt-8">
+          <p class="text-sm">© {{ year }} PianoDude. Все права защищены.</p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="{% static 'dependencies/js/headerMove.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="{% static 'dependencies/js/swiper-init.js' %}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Панель администратора{% endblock %}
+
+{% block content %}
+<div class="pt-[100px] pb-[150px]">
+    <div class="max-w-5xl mx-auto bg-white shadow rounded-lg p-6">
+      <h1 class="text-2xl font-bold mb-4">Панель администратора</h1>
+      <div class="space-y-4">
+          <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
+            📈 Проверка посещаемости сайта
+          </a>
+          <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
+            🧾 Просмотр истории заказов
+          </a>
+          <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
+            🛒 Обработка и изменение статусов заказов
+          </a>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

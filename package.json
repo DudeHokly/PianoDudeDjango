@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "swiper": "^11.2.6"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17"
+  },
+  "name": "pianodude",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tailwindcss -i ./general/static/dependencies/css/input.css -o ./general/static/dependencies/css/output.css --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+{% load lucide %}
+
+{% block content %}
+<!-- Hero -->
+<div class="bg-gradient-to-r from-[#008080] to-[#00b3b3] w-full h-[200px] flex items-center justify-center mt-[64px]">
+  <h2 class="text-3xl font-semibold text-black">Добро пожаловать в the PianoDude !</h2>
+</div>
+
+<section class="container mx-auto px-4 py-10 flex gap-6">
+  <!-- Sidebar Filters -->
+  <aside class="w-64 bg-white p-4 rounded-xl shadow">
+    <h2 class="text-2xl font-semibold mb-4">Фильтры</h2>
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1">Цена</label>
+      <input type="range" min="29000" max="1000000" value="29000" class="w-full">
+      <div class="flex justify-between text-sm text-gray-600">
+        <span>29000</span>
+        <span>1000000</span>
+      </div>
+    </div>
+
+  <!-- Динамические фильтры -->
+  {% for filter_name, filter_values in filters.items %}
+    <div class="mb-2">
+      <button
+        type="button"
+        class="w-full flex justify-between items-center px-2 py-2 rounded transition-colors hover:bg-gray-100 text-sm"
+        onclick="toggleFilter('{{ forloop.counter0 }}')"
+        aria-expanded="false"
+        id="filter-btn-{{ forloop.counter0 }}"
+      >
+        <span>{{ filter_name }}</span>
+        <svg class="w-4 h-4 transition-transform" id="filter-icon-{{ forloop.counter0 }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div
+        id="filter-content-{{ forloop.counter0 }}"
+        class="overflow-hidden max-h-0 transition-all duration-300"
+        style="will-change: max-height;"
+      >
+        <div class="p-2 text-sm text-gray-600 space-y-2">
+          {% for value in filter_values %}
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" name="{{ filter_name }}" value="{{ value }}" class="text-teal-600 focus:ring-teal-500 rounded">
+              <span>{{ value }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</aside>
+
+  <!-- Каталог пианино -->
+<div class="bg-white shadow-md rounded-lg p-4 flex-1">
+  <!-- Заголовок и сортировка -->
+    <div class="flex items-center justify-between gap-4 mb-6">
+      <h2 class="text-2xl font-bold">Каталог пианино</h2>
+      <div class="relative">
+        <button type="button" class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm"
+          onclick="toggleFilter('sort')"
+          aria-expanded="false"
+          id="filter-btn-sort"
+        >
+          <span>Сортировать</span>
+          {% lucide "chevron-down" class="w-4 h-4" %}
+        </button>
+        <div id="filter-content-sort"
+          class="absolute right-0 mt-2 w-48 bg-gray-100 rounded-md shadow-lg z-50 overflow-hidden max-h-0 transition-all duration-300"
+          style="will-change: max-height;"
+        >
+          <a href="?sort=price_asc" class="block px-4 py-2 text-sm hover:bg-gray-100">По возрастанию цены</a>
+          <a href="?sort=price_desc" class="block px-4 py-2 text-sm hover:bg-gray-100">По убыванию цены</a>
+          <a href="?sort=name" class="block px-4 py-2 text-sm hover:bg-gray-100">По названию</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Сетка карточек товаров -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for product in products %}
+      <div class="cursor-pointer group transform transition duration-500 hover:scale-105 border-2 border-teal-600 rounded-xl p-5 bg-white flex flex-col justify-between">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-48 object-contain mb-3 bg-white" />
+        <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
+
+        {% if product.old_price %}
+          <p class="text-sm line-through text-gray-500">{{ product.old_price }} ₽</p>
+        {% endif %}
+
+        <p class="text-lg font-bold text-teal-700">{{ product.price }} ₽</p>
+
+        <div class="mt-4 flex justify-between items-center">
+          <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
+            {% lucide "move-right" class="w-5 h-5" %}
+          </a>
+          <button class="bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700">В корзину</button>
+        </div>
+      </div>
+    {% empty %}
+      <p class="col-span-full text-center text-gray-500">Нет товаров для отображения.</p>
+    {% endfor %}
+  </div> 
+  <!-- Пагинация -->
+   <div class="mt-8 flex justify-center">
+    <nav class="bg-white rounded-xl shadow px-4 py-2 flex gap-2 items-center">
+      {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+           class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+          Назад
+        </a>
+      {% else %}
+        <span class="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed">
+          Назад
+        </span>
+      {% endif %}
+
+      {% for num in products.paginator.page_range %}
+        {% if products.number == num %}
+          <span class="px-3 py-2 text-sm font-semibold rounded-lg border border-teal-600 bg-teal-100 text-teal-800">
+            {{ num }}
+          </span>
+        {% else %}
+          <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+             class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+            {{ num }}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+           class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+          Вперёд
+        </a>
+      {% else %}
+        <span class="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed">
+          Вперёд
+        </span>
+      {% endif %}
+    </nav>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Script for collapsible filters -->
+<script>
+  function toggleFilter(index) {
+    const content = document.getElementById(`filter-content-${index}`);
+    const icon = document.getElementById(`filter-icon-${index}`);
+    const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px";
+    if (isOpen) {
+      content.style.maxHeight = "0px";
+      if (icon) icon.style.transform = "rotate(0deg)";
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+      if (icon) icon.style.transform = "rotate(180deg)";
+    }
+  }
+</script>
+{% endblock %}

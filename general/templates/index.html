@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+{% load lucide %}
+
+{% block content %} 
+    <section
+        class="relative flex items-center justify-center h-screen bg-cover bg-center"
+        style="background-image: url({% static 'dependencies/images/mainPage/mainPage.webp' %});"
+        >
+        <div class="absolute text-center bg-white/50 text-black backdrop-blur-md opacity-95 shadow-lg p-5 rounded-3xl">
+          <h1 class="text-3xl font-bold mb-4">
+            Звучи со всей душой и раскрывай свой музыкальный потенциал!
+          </h1>
+          <button
+            class="text-lg px-6 py-3  bg-[#008080] rounded-lg text-white hover:bg-yellow-400 transition"
+          >
+            Заказать инструмент
+          </button>
+        </div>
+      </section>
+{% comment %} DecorateElem {% endcomment %}
+<section class="flex flex-wrap justify-center gap-4 py-4 px-2">
+  {% for slogan in slogans %}
+    <div class="flex items-center justify-center py-10 px-6 border-[5px] border-[#008080] bg-white w-full max-w-md rounded-xl hover:scale-105 transition-transform duration-300 shadow-md">
+      <i class="pr-4">
+        {% lucide slogan.icon size=40 class="text-[#008080] mr-4" %}
+      </i>
+      <div>
+        <h3 class="text-lg font-bold">{{ slogan.title }}</h3>
+        <p>{{ slogan.text_below }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+ {% comment %} AdverComp {% endcomment %}
+ <section class="relative w-full h-[700px] bg-cover bg-center" style="background-image: url({% static 'dependencies/images/mainPage/mainPageAdverBg.webp' %});">
+  <div class="flex h-full items-center justify-start">
+    <div class="p-8 bg-white/80 shadow-xl rounded-lg max-w-[700px] mx-auto my-auto">
+      <h2 class="text-2xl font-semibold text-[#008080] mb-3">Музыка — это язык души</h2>
+      <p class="text-black text-lg font-medium mb-6">
+        Наш магазин предлагает широкий выбор качественных музыкальных инструментов для профессионалов и любителей. 
+      Опытные консультанты помогут подобрать инструмент, который раскроет ваш талант. Доставка по всей стране, 
+      гарантия качества и послепродажное обслуживание — мы заботимся о наших клиентах!
+      </p>
+      {% for item in items %}
+        <div class="flex items-center space-x-4 py-4">
+          <div class="flex items-center justify-center w-12 h-12">
+            {% lucide item.icon size=36 class="text-black" %}
+          </div>
+          <div>
+            <h3 class="text-[#008080] font-semibold text-xl">{{ item.title }}</h3>
+            <p class="text-black text-md font-medium">{{ item.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+  {% comment %} Карусель с cube-эффектом {% endcomment %}
+<section class="swiper mySwiper w-full max-w-screen-lg h-[500px] mx-auto mt-10 relative">
+  <div class="swiper-wrapper">
+    {% for slide in carousel_slider %}
+      <div class="swiper-slide bg-black">
+        <img src="{{ slide.image_url }}"
+             alt="Слайд {{ forloop.counter }}"
+             class="w-full h-full object-cover" />
+      </div>
+    {% endfor %}
+  </div>
+  <div class="swiper-pagination absolute bottom-4 left-1/2 -translate-x-1/2 z-10"></div>
+</section>
+
+{% comment %} News Lenta and modal {% endcomment %}
+<section id="news-scroll" class="relative overflow-hidden h-[300px] w-full my-12">
+  <div id="scroll-track" class="flex w-max gap-4 will-change-transform transform-gpu backface-hidden">
+    {% for item in news %}
+      <div class="news-item relative flex-shrink-0 w-[400px] h-[300px] overflow-hidden cursor-pointer"
+           data-title="{{ item.title }}"
+           data-text="{{ item.text }}"
+           data-image="{% static item.background_Image %}">
+        <img src="{% static item.background_Image %}" alt="{{ item.title }}"
+             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 hover:opacity-70" />
+        <div class="absolute inset-0 flex flex-col justify-end p-4 text-white bg-black bg-opacity-50">
+          <h3 class="text-lg font-bold">{{ item.title }}</h3>
+          <p class="text-sm mt-2">{{ item.text }}</p>
+        </div>
+        <div class="absolute inset-0 flex justify-center items-center bg-black bg-opacity-70 opacity-0 hover:opacity-100 transition-opacity duration-300 text-white text-sm">
+          Посмотреть новость
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Модальное окно -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50">
+  <div id="modal-background" class="relative w-full max-w-[960px] h-[540px] bg-cover bg-center rounded-xl shadow-xl transform transition-all">
+    <div class="absolute bottom-0 left-0 p-6 bg-black bg-opacity-60 text-white max-w-[70%]">
+      <h2 id="modal-title" class="text-2xl font-bold"></h2>
+      <p id="modal-text" class="mt-2 text-sm"></p>
+    </div>
+    <button id="modal-close" class="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-3 py-1 rounded">X</button>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const scrollTrack = document.getElementById("scroll-track");
+    let isPaused = false;
+
+    scrollTrack.addEventListener('mouseenter', () => isPaused = true);
+    scrollTrack.addEventListener('mouseleave', () => isPaused = false);
+
+    const items = [...scrollTrack.children];
+    const itemWidth = items[0].offsetWidth + 16; 
+    const totalWidth = items.length * itemWidth;
+
+    items.forEach(item => {
+      const clone = item.cloneNode(true);
+      scrollTrack.appendChild(clone);
+    });
+
+    let scrollPos = 0;
+    function scrollLoop() {
+      if (!isPaused) {
+        scrollPos -= 0.9;
+        if (Math.abs(scrollPos) >= totalWidth) scrollPos = 0;
+        scrollTrack.style.transform = `translateX(${scrollPos}px)`;
+      }
+      requestAnimationFrame(scrollLoop);
+    }
+
+    scrollLoop();
+
+    // Модалка
+    const modal = document.getElementById("modal");
+    const modalBg = document.getElementById("modal-background");
+    const modalTitle = document.getElementById("modal-title");
+    const modalText = document.getElementById("modal-text");
+    const closeBtn = document.getElementById("modal-close");
+
+    const showModal = (title, text, image) => {
+      modal.classList.remove("hidden");
+      modalBg.classList.remove("animate-fadeOut");
+      modalBg.classList.add("animate-fadeIn");
+      modalBg.style.backgroundImage = `url('${image}')`;
+      modalTitle.textContent = title;
+      modalText.textContent = text;
+    };
+
+    const hideModal = () => {
+      modalBg.classList.remove("animate-fadeIn");
+      modalBg.classList.add("animate-fadeOut");
+      setTimeout(() => modal.classList.add("hidden"), 200);
+    };
+
+    document.querySelectorAll(".news-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const title = item.dataset.title;
+        const text = item.dataset.text;
+        const image = item.dataset.image;
+        showModal(title, text, image);
+      });
+    });
+
+    closeBtn.addEventListener("click", hideModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) hideModal();
+    });
+  });
+</script>
+
+{% endblock %}
+
+
