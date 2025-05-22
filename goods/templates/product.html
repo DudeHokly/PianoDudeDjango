@@ -2,10 +2,58 @@
 {% load static %}
 {% load lucide %}
 
-{% block content %} 
-  <section class="container mx-auto px-4 py-6">
-    <h1>Hi dude</h1>
+{% block content %}
+<section class="container mx-auto px-4 py-10 mt-[64px]">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start bg-white p-6 rounded-xl shadow animate-fade-in">
+    
+    <!-- Изображение товара -->
+    <div class="transition-transform duration-500 hover:scale-105">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-auto object-contain rounded-lg shadow-md" />
+      <div class="mt-4 space-y-1">
+        <p class="text-2xl font-bold text-teal-700 transition-opacity duration-300 hover:opacity-80">{{ product.price }} ₽</p>
+        {% if product.old_price %}
+          <p class="text-gray-500 line-through text-sm">{{ product.old_price }} ₽</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Описание и характеристики -->
+    <div class="space-y-6">
+      <h1 class="text-3xl font-semibold tracking-tight">{{ product.name }}</h1>
+
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Характеристики:</h2>
+        <ul class="space-y-3 text-gray-700 divide-y divide-gray-200">
+          <li class="flex items-start gap-2 pt-2">{% lucide "palette" class="w-5 h-5 text-teal-600" %}<span><strong>Цвет:</strong> {{ product.color }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "factory" class="w-5 h-5 text-teal-600" %}<span><strong>Производитель:</strong> {{ product.manufacturer }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "audio-lines" class="w-5 h-5 text-teal-600" %}<span><strong>Полифония:</strong> {{ product.polyphony }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "keyboard" class="w-5 h-5 text-teal-600" %}<span><strong>Количество клавиш:</strong> {{ product.keys }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "clock" class="w-5 h-5 text-teal-600" %}<span><strong>Метроном:</strong> {{ product.metronome|yesno:"Есть,Нет" }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "mic" class="w-5 h-5 text-teal-600" %}<span><strong>Записывающее устройство:</strong> {{ product.recorder|yesno:"Есть,Нет" }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "bluetooth" class="w-5 h-5 text-teal-600" %}<span><strong>Bluetooth:</strong> {{ product.bluetooth|yesno:"Да,Нет" }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "music" class="w-5 h-5 text-teal-600" %}<span><strong>Кол-во тембров:</strong> {{ product.tones }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "hammer" class="w-5 h-5 text-teal-600" %}<span><strong>Молоточковая клавиатура:</strong> {{ product.hammer_keyboard|yesno:"Да,Нет" }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "maximize-2" class="w-5 h-5 text-teal-600" %}<span><strong>Размеры:</strong> {{ product.size }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "weight" class="w-5 h-5 text-teal-600" %}<span><strong>Вес:</strong> {{ product.weight }} г</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "battery-charging" class="w-5 h-5 text-teal-600" %}<span><strong>Питание:</strong> {{ product.power }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "shield-check" class="w-5 h-5 text-teal-600" %}<span><strong>Гарантийный срок:</strong> {{ product.warranty }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "audio-lines" class="w-5 h-5 text-teal-600" %}<span><strong>Звуковые эффекты:</strong> {{ product.sound_effects }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "settings" class="w-5 h-5 text-teal-600" %}<span><strong>Функции:</strong> {{ product.functions }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "align-vertical-space-between" class="w-5 h-5 text-teal-600" %}<span><strong>Жесткость клавиатуры:</strong> {{ product.key_weight }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "square" class="w-5 h-5 text-teal-600" %}<span><strong>Размер клавиш:</strong> {{ product.key_size }}</span></li>
+          <li class="flex items-start gap-2 pt-2">{% lucide "plug" class="w-5 h-5 text-teal-600" %}<span><strong>Интерфейсы:</strong> {{ product.interfaces }}</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out both;
+  }
+</style>
 {% endblock %}
-
-

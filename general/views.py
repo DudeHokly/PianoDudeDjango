@@ -28,13 +28,6 @@ def get_menu():
             ],
         },
         {
-            "label": {"name": "Услуги", "path": "/FakeReviews"},
-            "links": [
-                {"name": "Ремонт инструментов", "path": "/Maintenance"},
-                {"name": "Обучение игре", "path": "/TeachingPage"},
-            ],
-        },
-        {
             "label": {"name": "Контакты", "path": "/contacts"},
             "links": [
                 {"name": "Обратная связь", "path": "/feedback"},
