@@ -60,7 +60,6 @@ class Product(models.Model):
     warranty = models.CharField(max_length=50, default="12 месяцев")
 
     sound_effects = models.CharField(max_length=255, default="Reverb")
-    functions = models.CharField(max_length=255, default="")
 
     key_weight = models.CharField(
         max_length=50,

@@ -62,6 +62,20 @@ def catalog(request):
     sort = request.GET.get("sort")
     products = Product.objects.all()
 
+    color = request.GET.getlist("Цвет")
+    manufacturer = request.GET.getlist("Производитель")
+    price = request.GET.get("price")
+
+    if color:
+        products = products.filter(color__in=color)
+    if manufacturer:
+        products = products.filter(manufacturer__in=manufacturer)
+    if price:
+        try:
+            products = products.filter(price__gte=float(price))
+        except ValueError:
+            pass
+
     if sort == "price_asc":
         products = products.order_by("price")
     elif sort == "price_desc":
@@ -74,24 +88,10 @@ def catalog(request):
     page_obj = paginator.get_page(page_number)
 
     filters = {
-        "Цвет": [
-            "Черный",
-            "Коричневый",
-            "Белый",
-            "Палисандр",
-            "Серый",
-            "Красный",
-            "Синий",
-            "Жёлтый",
-        ],
-        "Производитель": [
-            "Yamaha",
-            "Casio",
-            "Roland",
-            "Artesia",
-            "Virtuozo",
-            "Ringway",
-        ],
+        "Цвет": Product.objects.values_list("color", flat=True).distinct(),
+        "Производитель": Product.objects.values_list(
+            "manufacturer", flat=True
+        ).distinct(),
         "Полифония": ["16", "32", "48", "64", "80", "128", "256"],
         "Количество клавиш": ["61", "68", "73", "76", "88"],
         "Метроном": ["Есть", "Нет", "Да"],
@@ -116,6 +116,10 @@ def catalog(request):
         "Интерфейсы": ["6,3 мм", "3,5 мм", "USB", "AUX"],
     }
 
+    selected_filters = {}
+    for filter_name in filters.keys():
+        selected_filters[filter_name] = request.GET.getlist(filter_name)
+
     return render(
         request,
         "catalog.html",
@@ -123,8 +127,13 @@ def catalog(request):
             "menu_items": get_menu(),
             "products": page_obj,
             "filters": filters,
+            "selected_filters": selected_filters,
             "footer_links": get_footer_links(),
             "year": datetime.now().year,
+            "selected_sort": sort,
+            "selected_color": color,
+            "selected_manufacturer": manufacturer,
+            "selected_price": price,
         },
     )
 

@@ -99,7 +99,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("index")
+            return redirect("general:index")
     else:
         form = RegisterForm()
 

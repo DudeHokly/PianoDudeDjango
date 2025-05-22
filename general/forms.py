@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 
+from django.db import transaction
+
 from general.models import UserProfile
 
 tailwind_input_classes = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#008080] focus:border-[#008080]"
@@ -99,13 +101,16 @@ class RegisterForm(UserCreationForm):
         return phone
 
     def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-            UserProfile.objects.create(
-                user=user,
-                fio=self.cleaned_data["fio"],
-                phone=self.cleaned_data["phone"],
-            )
-        return user
+        with transaction.atomic():
+            user = super().save(commit=False)
+            user.email = self.cleaned_data["email"]
+            if commit:
+                user.save()
+                UserProfile.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        "fio": self.cleaned_data["fio"],
+                        "phone": self.cleaned_data["phone"],
+                    },
+                )
+            return user
