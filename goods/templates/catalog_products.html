@@ -1,0 +1,112 @@
+
+{% load static %}
+{% load lucide %}
+<div class="bg-white shadow-md rounded-lg p-4 flex-1">
+    <form method="get" class="flex items-center justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-bold">Каталог пианино</h2>
+        <div class="relative">
+            <button type="button"
+                    class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm cursor-pointer"
+                    onclick="toggleFilter('sort')"
+                    aria-expanded="false"
+                    id="filter-btn-sort">
+                <span class="text-sm text-gray-700">
+                    Сортировка:
+                    {% if sort == 'price_asc' %}по возрастанию цены
+                    {% elif sort == 'price_desc' %}по убыванию цены
+                    {% elif sort == 'name' %}по названию
+                    {% else %}по умолчанию
+                    {% endif %}
+                </span>
+                {% lucide "chevron-down" class="w-4 h-4 transition-transform duration-300" id="filter-icon-sort" %}
+            </button>
+            <ul id="filter-content-sort"
+                class="absolute right-0 mt-2 w-56 bg-white border-gray-200 rounded-md shadow-lg z-50 max-h-0 overflow-hidden transition-all duration-300"
+                style="will-change: max-height;">
+                <li>
+                    <a href="?sort=price_asc"
+                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'price_asc' %}font-semibold{% endif %}">
+                        По возрастанию цены
+                    </a>
+                </li>
+                <li>
+                    <a href="?sort=price_desc"
+                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'price_desc' %}font-semibold{% endif %}">
+                        По убыванию цены
+                    </a>
+                </li>
+                <li>
+                    <a href="?sort=name"
+                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'name' %}font-semibold{% endif %}">
+                        По названию
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </form>
+
+    <!-- Сетка карточек товаров -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for product in products %}
+            <div class="cursor-pointer group transform transition duration-500 hover:scale-105 border-2 border-teal-600 rounded-xl p-5 bg-white flex flex-col justify-between">
+                <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-48 object-contain mb-3 bg-white" />
+                    <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
+                    {% if product.old_price %}
+                        <p class="text-sm line-through text-gray-500">{{ product.old_price }} ₽</p>
+                    {% endif %}
+                    <p class="text-lg font-bold text-teal-700">{{ product.price }} ₽</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
+                            {% lucide "move-right" class="w-5 h-5" %}
+                        </a>
+                        <button class="bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700">В корзину</button>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="col-span-full text-center text-gray-500">Нет товаров для отображения.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <div class="mt-8 flex justify-center">
+        <nav class="bg-white rounded-xl shadow px-4 py-2 flex gap-2 items-center">
+            {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+                   class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+                    Назад
+                </a>
+            {% else %}
+                <span class="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed">
+                    Назад
+                </span>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                    <span class="px-3 py-2 text-sm font-semibold rounded-lg border border-teal-600 bg-teal-100 text-teal-800">
+                        {{ num }}
+                    </span>
+                {% else %}
+                    <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+                       class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+                        {{ num }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+                   class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+                    Вперёд
+                </a>
+            {% else %}
+                <span class="px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed">
+                    Вперёд
+                </span>
+            {% endif %}
+        </nav>
+    </div>
+</div>
+

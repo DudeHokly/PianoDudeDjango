@@ -59,12 +59,12 @@ def get_footer_links():
 
 # Create your views here.
 def catalog(request):
-    sort = request.GET.get("sort")
-    products = Product.objects.all()
-
-    color = request.GET.getlist("Цвет")
+    sort = request.GET.get("sort", "")
+    price = request.GET.get("price", "")
     manufacturer = request.GET.getlist("Производитель")
-    price = request.GET.get("price")
+    color = request.GET.getlist("Цвет")
+
+    products = Product.objects.all()
 
     if color:
         products = products.filter(color__in=color)
@@ -120,22 +120,33 @@ def catalog(request):
     for filter_name in filters.keys():
         selected_filters[filter_name] = request.GET.getlist(filter_name)
 
-    return render(
-        request,
-        "catalog.html",
-        {
-            "menu_items": get_menu(),
-            "products": page_obj,
-            "filters": filters,
-            "selected_filters": selected_filters,
-            "footer_links": get_footer_links(),
-            "year": datetime.now().year,
-            "selected_sort": sort,
-            "selected_color": color,
-            "selected_manufacturer": manufacturer,
-            "selected_price": price,
-        },
-    )
+    full_context = {
+        "menu_items": get_menu(),
+        "products": page_obj,
+        "filters": filters,
+        "selected_filters": selected_filters,
+        "footer_links": get_footer_links(),
+        "year": datetime.now().year,
+        "selected_sort": sort,
+        "selected_color": color,
+        "selected_manufacturer": manufacturer,
+        "selected_price": price,
+    }
+
+    partial_context = {
+        "products": page_obj,
+        "filters": filters,
+        "selected_filters": selected_filters,
+        "selected_sort": sort,
+        "selected_color": color,
+        "selected_manufacturer": manufacturer,
+        "selected_price": price,
+    }
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "catalog_products.html", partial_context)
+    else:
+        return render(request, "catalog.html", full_context)
 
 
 def product(request, slug):
