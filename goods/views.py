@@ -1,7 +1,10 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from datetime import datetime
 from django.core.paginator import Paginator
 
+from django.http import JsonResponse
+
+from goods.cart import Cart
 from goods.models import Product
 
 
@@ -10,19 +13,15 @@ def get_menu():
         {
             "label": {"name": "Каталог", "path": "/catalog"},
             "links": [
-                {"name": "Гитары", "path": "/catalog"},
-                {"name": "Клавишные", "path": "/catalog"},
-                {"name": "Ударные", "path": "/catalog"},
-                {"name": "Смычковые", "path": "/catalog"},
-                {"name": "Электроника", "path": "/catalog"},
+                {"name": "Мелодии", "path": "/catalog"},
+                {"name": "Ритмы", "path": "/catalog"},
+                {"name": "Гармонии", "path": "/catalog"},
+                {"name": "Вдохновение", "path": "/catalog"},
+                {"name": "Симфония", "path": "/catalog"},
             ],
         },
         {
             "label": {"name": "Услуги", "path": "/FakeReviews"},
-            "links": [
-                {"name": "Ремонт инструментов", "path": "/Maintenance"},
-                {"name": "Обучение игре", "path": "/TeachingPage"},
-            ],
         },
         {
             "label": {"name": "Контакты", "path": "/contacts"},
@@ -95,12 +94,10 @@ def catalog(request):
         "Полифония": ["16", "32", "48", "64", "80", "128", "256"],
         "Количество клавиш": ["61", "68", "73", "76", "88"],
         "Метроном": ["Есть", "Нет", "Да"],
-        "Записывающее устройство": ["Есть", "Нет", "Да"],
+        "Устройство записи": ["Есть", "Нет", "Да"],
         "Bluetooth": ["Да", "Нет"],
         "Кол-во тембров": ["1", "2", "3", "10", "20", "50", "100+"],
-        "Молоточковая клавиатура": ["Да", "Нет"],
-        "Размеры, мм": ["1326 х 272 х 129 мм", "Компактные", "Стандартные", "Большие"],
-        "Вес товара, г": ["11500", "70000", "45000", "13800", "17100"],
+        "Молоточковая": ["Да", "Нет"],
         "Вид питания": ["Внешний источник питания", "От сети 220В"],
         "Гарантийный срок": ["12 месяцев"],
         "Звуковые эффекты": ["Chorus", "Reverb", "Equalizer", "Phaser", "Flanger"],
@@ -162,3 +159,53 @@ def product(request, slug):
             "year": datetime.now().year,
         },
     )
+
+
+def add_to_cart(request):
+    if (
+        request.method == "POST"
+        and request.headers.get("x-requested-with") == "XMLHttpRequest"
+    ):
+        product_id = request.POST.get("product_id")
+        if not product_id:
+            return JsonResponse({"success": False, "message": "No product ID"})
+
+        cart = Cart(request)
+        cart.add(product_id)
+        return JsonResponse({"success": True, "cart_count": len(cart)})
+
+    return JsonResponse({"success": False, "message": "Invalid request"})
+
+
+def cart_detail(request):
+    cart = Cart(request)
+    return render(
+        request,
+        "cart_detail.html",
+        {
+            "cart": cart,
+            "menu_items": get_menu(),
+            "footer_links": get_footer_links(),
+            "year": datetime.now().year,
+        },
+    )
+
+
+def order_create(request):
+    return render(
+        request,
+        "order_create.html",
+        {
+            "menu_items": get_menu(),
+            "footer_links": get_footer_links(),
+            "year": datetime.now().year,
+        },
+    )
+
+
+def remove_from_cart(request, product_id):
+    cart = request.session.get("cart", {})
+    if str(product_id) in cart:
+        del cart[str(product_id)]
+        request.session["cart"] = cart
+    return redirect("goods:cart_detail")

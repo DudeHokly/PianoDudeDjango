@@ -14,6 +14,8 @@ from general.models import UserProfile
 
 from .forms import RegisterForm
 
+from goods.cart import Cart
+
 
 def get_menu():
     return [
@@ -26,6 +28,9 @@ def get_menu():
                 {"name": "Смычковые", "path": "/catalog"},
                 {"name": "Электроника", "path": "/catalog"},
             ],
+        },
+        {
+            "label": {"name": "Услуги", "path": "/FakeReviews"},
         },
         {
             "label": {"name": "Контакты", "path": "/contacts"},
@@ -117,12 +122,20 @@ def register(request):
 
 # @staff_member_required
 def panel_admin(request):
+
     # Здесь будет логика:
     # - Сбор статистики посещений
     # - История заказов
     # - Обработка заказов
-    # Пока заглушка:
-    return render(request, "panel_admin.html")
+    return render(
+        request,
+        "panel_admin.html",
+        {
+            "menu_items": get_menu(),
+            "footer_links": get_footer_links(),
+            "year": datetime.now().year,
+        },
+    )
 
 
 def index(request):
@@ -146,7 +159,7 @@ def index(request):
 
     items = [
         {
-            "icon": "cigarette",
+            "icon": "guitar",
             "title": "Мелодия вашей мечты",
             "description": "Откройте мир звуков с нашими инструментами.",
         },
@@ -163,9 +176,13 @@ def index(request):
     ]
 
     carousel_slider = [
-        {"image_url": "static/dependencies/images/mainPage/cube1.jpg"},
-        {"image_url": "static/dependencies/images/mainPage/mainPage1.png"},
-        {"image_url": "static/dependencies/images/mainPage/mainPage1.png"},
+        {"image_url": "static/dependencies/images/mainPage/cube1.webp"},
+        {"image_url": "static/dependencies/images/mainPage/cube2.png"},
+        {"image_url": "static/dependencies/images/mainPage/cube3.webp"},
+        {"image_url": "static/dependencies/images/mainPage/cube4.webp"},
+        {"image_url": "static/dependencies/images/mainPage/cube5.webp"},
+        {"image_url": "static/dependencies/images/mainPage/cube6.webp"},
+        {"image_url": "static/dependencies/images/mainPage/cube7.webp"},
     ]
 
     news = [
@@ -211,6 +228,18 @@ def index(request):
             "text": "От 10000 рублей доставим ваш инструмент бесплатно!",
             "background_Image": "dependencies/images/mainPage/newsLenta/adNews7.jpg",
         },
+        {
+            "id": 8,
+            "title": "Великолепная возможность!",
+            "text": "От 10000 рублей доставим ваш инструмент бесплатно!",
+            "background_Image": "dependencies/images/mainPage/newsLenta/adNews8.jpg",
+        },
+        {
+            "id": 9,
+            "title": "Последнее предложение!",
+            "text": "Не упусти будет последний шанс и бесплатно!",
+            "background_Image": "dependencies/images/mainPage/newsLenta/adNews9.jpg",
+        },
     ]
 
     return render(
@@ -229,22 +258,14 @@ def index(request):
 
 
 def account(request):
-    purchased_products = [
-        {
-            "name": "Электропианино Yamaha P-45",
-            "description": "Отличное цифровое пианино для начинающих и продвинутых музыкантов.",
-            "price": "42 990",
-            "old_price": "47 990",
-        },
-        # другие товары...
-    ]
+    cart = Cart(request)
 
     return render(
         request,
         "account.html",
         {
             "menu_items": get_menu(),
-            "purchased_products": purchased_products,
+            "cart": cart,
             "footer_links": get_footer_links(),
             "year": datetime.now().year,
         },

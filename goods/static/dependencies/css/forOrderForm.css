@@ -1,0 +1,6 @@
+.order-input {
+  @apply p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none;
+}
+.confirm-button {
+  @apply bg-[#008080] text-white px-6 py-3 rounded-full hover:bg-[#006666] transition-colors text-lg font-medium;
+}

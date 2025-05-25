@@ -33,12 +33,9 @@
           <li class="flex items-start gap-2 pt-2">{% lucide "bluetooth" class="w-5 h-5 text-teal-600" %}<span><strong>Bluetooth:</strong> {{ product.bluetooth|yesno:"Да,Нет" }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "music" class="w-5 h-5 text-teal-600" %}<span><strong>Кол-во тембров:</strong> {{ product.tones }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "hammer" class="w-5 h-5 text-teal-600" %}<span><strong>Молоточковая клавиатура:</strong> {{ product.hammer_keyboard|yesno:"Да,Нет" }}</span></li>
-          <li class="flex items-start gap-2 pt-2">{% lucide "maximize-2" class="w-5 h-5 text-teal-600" %}<span><strong>Размеры:</strong> {{ product.size }}</span></li>
-          <li class="flex items-start gap-2 pt-2">{% lucide "weight" class="w-5 h-5 text-teal-600" %}<span><strong>Вес:</strong> {{ product.weight }} г</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "battery-charging" class="w-5 h-5 text-teal-600" %}<span><strong>Питание:</strong> {{ product.power }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "shield-check" class="w-5 h-5 text-teal-600" %}<span><strong>Гарантийный срок:</strong> {{ product.warranty }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "audio-lines" class="w-5 h-5 text-teal-600" %}<span><strong>Звуковые эффекты:</strong> {{ product.sound_effects }}</span></li>
-          <li class="flex items-start gap-2 pt-2">{% lucide "settings" class="w-5 h-5 text-teal-600" %}<span><strong>Функции:</strong> {{ product.functions }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "align-vertical-space-between" class="w-5 h-5 text-teal-600" %}<span><strong>Жесткость клавиатуры:</strong> {{ product.key_weight }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "square" class="w-5 h-5 text-teal-600" %}<span><strong>Размер клавиш:</strong> {{ product.key_size }}</span></li>
           <li class="flex items-start gap-2 pt-2">{% lucide "plug" class="w-5 h-5 text-teal-600" %}<span><strong>Интерфейсы:</strong> {{ product.interfaces }}</span></li>

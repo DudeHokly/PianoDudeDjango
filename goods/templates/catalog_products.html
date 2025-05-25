@@ -1,16 +1,15 @@
-
 {% load static %}
 {% load lucide %}
-<div class="bg-white shadow-md rounded-lg p-4 flex-1">
+<div class="bg-gray-100  shadow-md rounded-lg p-4 flex-1">
     <form method="get" class="flex items-center justify-between gap-4 mb-6">
         <h2 class="text-2xl font-bold">Каталог пианино</h2>
         <div class="relative">
             <button type="button"
-                    class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm cursor-pointer"
+                    class="flex items-center gap-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 rounded-md text-sm cursor-pointer"
                     onclick="toggleFilter('sort')"
                     aria-expanded="false"
                     id="filter-btn-sort">
-                <span class="text-sm text-gray-700">
+                <span class="text-sm text-white">
                     Сортировка:
                     {% if sort == 'price_asc' %}по возрастанию цены
                     {% elif sort == 'price_desc' %}по убыванию цены
@@ -21,23 +20,23 @@
                 {% lucide "chevron-down" class="w-4 h-4 transition-transform duration-300" id="filter-icon-sort" %}
             </button>
             <ul id="filter-content-sort"
-                class="absolute right-0 mt-2 w-56 bg-white border-gray-200 rounded-md shadow-lg z-50 max-h-0 overflow-hidden transition-all duration-300"
+                class="absolute right-0 mt-2 w-56 bg-teal-600 border-gray-200 rounded-md shadow-lg z-50 max-h-0 overflow-hidden transition-all duration-300"
                 style="will-change: max-height;">
                 <li>
                     <a href="?sort=price_asc"
-                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'price_asc' %}font-semibold{% endif %}">
+                       class="block px-4 py-2 hover:bg-teal-700 text-sm text-white {% if sort == 'price_asc' %}font-semibold{% endif %}">
                         По возрастанию цены
                     </a>
                 </li>
                 <li>
                     <a href="?sort=price_desc"
-                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'price_desc' %}font-semibold{% endif %}">
+                       class="block px-4 py-2 hover:bg-teal-700 text-sm text-white {% if sort == 'price_desc' %}font-semibold{% endif %}">
                         По убыванию цены
                     </a>
                 </li>
                 <li>
                     <a href="?sort=name"
-                       class="block px-4 py-2 hover:bg-gray-100 text-sm {% if sort == 'name' %}font-semibold{% endif %}">
+                       class="block px-4 py-2 hover:bg-teal-700 text-sm text-white {% if sort == 'name' %}font-semibold{% endif %}">
                         По названию
                     </a>
                 </li>
@@ -60,7 +59,7 @@
                         <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
                             {% lucide "move-right" class="w-5 h-5" %}
                         </a>
-                        <button class="bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700">В корзину</button>
+                        <button type="button" data-product-id="{{ product.id }}" class="add-to-cart-btn bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700">В корзину</button>
                     </div>
                 </a>
             </div>
@@ -109,4 +108,30 @@
         </nav>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.dataset.productId;
 
+                fetch("{% url 'catalog:add_to_cart' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: `product_id=${productId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Товар добавлен в корзину!");
+                    } else {
+                        alert("Ошибка добавления.");
+                    }
+                });
+            });
+        });
+    });
+</script>

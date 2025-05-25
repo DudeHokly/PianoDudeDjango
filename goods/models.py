@@ -53,9 +53,6 @@ class Product(models.Model):
 
     hammer_keyboard = models.BooleanField(default=False)
 
-    size = models.CharField(max_length=100, default="Стандартные")
-    weight = models.PositiveIntegerField(default=15000)
-
     power = models.CharField(max_length=100, default="От сети 220В")
     warranty = models.CharField(max_length=50, default="12 месяцев")
 

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% load lucide %}
+
+{% block content %}
+<section class="pt-[100px] px-[100px]">
+  <h2 class="text-xl font-bold mb-4">Корзина</h2>
+
+  {% if cart %}
+  <ul class="space-y-4">
+    {% for item in cart %}
+    <li class="flex items-center justify-between bg-white p-4 rounded shadow">
+      <div>
+        <span class="font-semibold">{{ item.product.name }}</span> — {{ item.quantity }} шт.
+        <span class="ml-2">= {{ item.total_price }}₽</span>
+      </div>
+      <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
+          {% lucide "trash-2" %}
+        </button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <p class="mt-6 font-bold text-right">Итого: {{ cart.get_total_price }}₽</p>
+  <div class="mt-4 text-right">
+    <a href="{% url 'goods:order_create' %}" class="inline-block bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition">
+      Оформить заказ
+    </a>
+  </div>
+  {% else %}
+  <p>Корзина пуста.</p>
+  {% endif %}
+</section>
+{% endblock %}

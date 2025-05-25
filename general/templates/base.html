@@ -11,9 +11,10 @@
     <link rel="stylesheet" href="{% static "dependencies/css/output.css" %}">   
     <link rel="stylesheet" href="{% static "dependencies/css/AnimForm.css" %}">   
     <link rel="stylesheet" href="{% static "dependencies/css/animNewsLenta.css" %}">   
+    <link rel="stylesheet" href="{% static "dependencies/css/forOrderForm.css" %}">  
   </head>
   <body class="font-roboto">
-    <div class="mx-auto font-sans bg-gray-100" style="font-family: 'Roboto', sans-serif;">
+    <div class="mx-auto font-sans bg-gray-300" style="font-family: 'Roboto', sans-serif;">
       
       {% comment %} Header {% endcomment %}
       <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all bg-white/50 backdrop-blur-md text-black py-3 shadow-none">
@@ -61,8 +62,13 @@
               {% endfor %}
           
               <li>
-                <a href="/ShopingCarting" class="hover:text-[#008080]">
+                <a href="{% url 'goods:cart_detail' %}" class="hover:text-[#008080]">
                   {% lucide 'shopping-cart' size=40 class="h-6 w-6" %}
+                  {% if cart_item_count > 0 %}
+                    <span class="ml-1 inline-block bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                      {{ cart_item_count }}
+                    </span>
+                  {% endif %}
                 </a>
               </li>
             </ul>
@@ -97,7 +103,7 @@
                   {% lucide 'dribbble' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
                 </i>
                 <i class="w-6 h-6">
-                  {% lucide 'accessibility' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
+                  {% lucide 'brain' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
                 </i>
                 <i class="w-6 h-6">
                   {% lucide 'handshake' size=27 class="text-white cursor-pointer hover:text-blue-300 transition-color" %}
@@ -131,5 +137,6 @@
     <script src="{% static 'dependencies/js/swiper-init.js' %}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/imask"></script>
   </body>
 </html>
