@@ -10,14 +10,13 @@
           <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
             📈 Проверка посещаемости сайта
           </a>
-          <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
-            🧾 Просмотр истории заказов
+          <a href="{% url 'general:user_list' %}" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
+            Просмотр списка пользователей + редактирование пользователя
           </a>
-          <a href="#" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
-            🛒 Обработка и изменение статусов заказов
+          <a href="{% url "admin:index" %}" class="block p-4 bg-gray-100 rounded hover:bg-gray-200">
+            Расширенниый функционал
           </a>
       </div>
   </div>
 </div>
-
 {% endblock %}

@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from django.contrib.auth import logout, login
 
 from django.contrib.auth.forms import AuthenticationForm
+
+from django.contrib.auth.decorators import user_passes_test
 
 from django.contrib.auth.models import User
 
@@ -28,9 +30,6 @@ def get_menu():
                 {"name": "Смычковые", "path": "/catalog"},
                 {"name": "Электроника", "path": "/catalog"},
             ],
-        },
-        {
-            "label": {"name": "Услуги", "path": "/FakeReviews"},
         },
         {
             "label": {"name": "Контакты", "path": "/contacts"},
@@ -122,15 +121,58 @@ def register(request):
 
 # @staff_member_required
 def panel_admin(request):
-
-    # Здесь будет логика:
-    # - Сбор статистики посещений
-    # - История заказов
-    # - Обработка заказов
     return render(
         request,
         "panel_admin.html",
         {
+            "menu_items": get_menu(),
+            "footer_links": get_footer_links(),
+            "year": datetime.now().year,
+        },
+    )
+
+
+@user_passes_test(lambda u: u.is_staff)
+def admin_user_list(request):
+    users = User.objects.all()
+    return render(
+        request,
+        "panel_admin_Users.html",
+        {
+            "users": users,
+            "menu_items": get_menu(),
+            "footer_links": get_footer_links(),
+            "year": datetime.now().year,
+        },
+    )
+
+
+@user_passes_test(lambda u: u.is_staff)
+def panel_admin_Users(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    profile = user.userprofile
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        fio = request.POST.get("fio")
+        phone = request.POST.get("phone")
+
+        user.username = username
+        user.email = email
+        profile.fio = fio
+        profile.phone = phone
+
+        user.save()
+        profile.save()
+        return redirect("admin_panel:user_list")
+
+    return render(
+        request,
+        "panel_admin_Users.html",
+        {
+            "user_obj": user,
+            "profile": profile,
             "menu_items": get_menu(),
             "footer_links": get_footer_links(),
             "year": datetime.now().year,
