@@ -3,35 +3,59 @@
 {% load lucide %}
 
 {% block content %}
-<section class="pt-[100px] px-[100px]">
-  <h2 class="text-xl font-bold mb-4">Корзина</h2>
+<section class="pt-24 px-4 md:px-16 lg:px-32 bg-gray-50 min-h-screen">
+  <h2 class="text-2xl font-bold mb-8 text-gray-800">Корзина</h2>
 
   {% if cart %}
-  <ul class="space-y-4">
+  <div class="flex flex-col gap-6">
     {% for item in cart %}
-    <li class="flex items-center justify-between bg-white p-4 rounded shadow">
-      <div>
-        <span class="font-semibold">{{ item.product.name }}</span> — {{ item.quantity }} шт.
-        <span class="ml-2">= {{ item.total_price }}₽</span>
+    <div class="flex flex-col md:flex-row items-center md:items-start bg-white p-6 rounded-lg shadow-md gap-6 hover:shadow-lg transition-shadow">
+      <!-- Изображение товара -->
+      <div class="w-full md:w-32 flex-shrink-0 flex items-center justify-center">
+        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
+             class="rounded-md shadow w-28 h-28 object-contain bg-gray-100" />
       </div>
-      <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post">
+
+      <!-- Информация о товаре -->
+      <div class="flex-1 flex flex-col gap-2">
+        <h3 class="text-lg font-semibold text-gray-900">{{ item.product.name }}</h3>
+        <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-700">
+          <span><strong>Цвет:</strong> {{ item.product.color }}</span>
+          <span><strong>Производитель:</strong> {{ item.product.manufacturer }}</span>
+          <span><strong>Полифония:</strong> {{ item.product.polyphony }}</span>
+          <span><strong>Клавиш:</strong> {{ item.product.keys }}</span>
+        </div>
+        <div class="flex items-center gap-6 mt-2">
+          <span class="text-gray-600">Количество: <strong>{{ item.quantity }}</strong> шт.</span>
+          <span class="text-gray-600">Цена: <strong>{{ item.total_price }}₽</strong></span>
+        </div>
+      </div>
+
+      <!-- Кнопка удаления -->
+      <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post" class="mt-4 md:mt-0 md:ml-4">
         {% csrf_token %}
-        <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
-          {% lucide "trash-2" %}
+        <button type="submit"
+          class="flex items-center gap-1 px-3 py-2 rounded text-red-600 hover:bg-red-50 hover:text-red-800 transition">
+          {% lucide "trash-2" class="w-5 h-5" %}
+          <span class="hidden md:inline">Удалить</span>
         </button>
       </form>
-    </li>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
 
-  <p class="mt-6 font-bold text-right">Итого: {{ cart.get_total_price }}₽</p>
-  <div class="mt-4 text-right">
-    <a href="{% url 'goods:order_create' %}" class="inline-block bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition">
+  <!-- Итог и оформление заказа -->
+  <div class="mt-10 flex flex-col items-end gap-4">
+    <div class="text-xl font-bold text-gray-800">Итого: {{ cart.get_total_price }}₽</div>
+    <a href="{% url 'goods:order_create' %}"
+       class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow hover:bg-blue-700 transition font-semibold">
       Оформить заказ
     </a>
   </div>
   {% else %}
-  <p>Корзина пуста.</p>
+  <div class="bg-white p-8 rounded shadow text-center text-gray-500 text-lg">
+    Корзина пуста.
+  </div>
   {% endif %}
 </section>
 {% endblock %}
