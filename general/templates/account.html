@@ -40,12 +40,9 @@
                   {{ item.total_price }} ₽
                   <span class="text-gray-400 ml-2 text-sm">{{ item.quantity }} шт</span>
                 </div>
-                <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post">
-                  {% csrf_token %}
-                  <button class="text-red-500 hover:text-red-700 transition-colors">
-                    {% lucide "trash-2" %}
-                  </button>
-                </form>
+                <button class="text-red-500 hover:text-red-700 transition-colors remove-from-cart-btn" data-product-id="{{ item.product.id }}">
+                  {% lucide "trash-2" %}
+                </button>
               </div>
             </div>
           </div>
@@ -55,6 +52,40 @@
       {% endfor %}
     </div>
   </div>
-
 </section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.remove-from-cart-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productId = this.dataset.productId;
+        fetch('{% url "goods:remove_from_cart" 0 %}'.replace('0', productId), {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Удаляем товар из DOM
+            const itemBlock = this.closest('.shadow-md');
+            itemBlock.remove();
+
+            // Проверяем, остались ли товары
+            const cartArea = document.getElementById('cart-scroll-area');
+            const itemsLeft = cartArea.querySelectorAll('.shadow-md').length;
+            if (itemsLeft === 0) {
+              const emptyMsg = document.createElement('p');
+              emptyMsg.className = 'text-gray-500';
+              emptyMsg.textContent = 'У вас пока нет товаров в корзине.';
+              cartArea.appendChild(emptyMsg);
+            }
+          }
+        });
+      });
+    });
+  });
+</script>
 {% endblock %}
