@@ -36,12 +36,11 @@
       </div>
 
       <!-- Скрытый блок для данных карты -->
-      <div id="card-fields" class="hidden grid gap-4">
+      <div id="card-fields" class="grid gap-4 max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
         <input name="card_number" type="text" placeholder="Номер карты" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
         <input name="card_expiry" type="text" placeholder="MM/YY" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
         <input name="card_cvc" type="text" placeholder="CVC" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
       </div>
-    </div>
     
 
     <!-- Кнопка -->
@@ -62,21 +61,28 @@
     const cardFields = document.getElementById("card-fields");
     const toast = document.getElementById("toast");
 
-    // Маска для телефона
+    // Маска телефона
     IMask(document.getElementById("phone"), {
       mask: '+{7} (000) 000-00-00'
     });
 
-    // Переключение блока оплаты
+    // Переключение видимости блока оплаты картой
     document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
       radio.addEventListener("change", e => {
-        cardFields.classList.toggle("hidden", e.target.value !== "card");
+        if (e.target.value === "card") {
+          cardFields.classList.remove("max-h-0", "opacity-0");
+          cardFields.classList.add("max-h-[500px]", "opacity-100");
+        } else {
+          cardFields.classList.remove("max-h-[500px]", "opacity-100");
+          cardFields.classList.add("max-h-0", "opacity-0");
+        }
       });
     });
 
-    // Валидация и отправка
+    // Обработка отправки формы
     form.addEventListener("submit", function(e) {
       e.preventDefault();
+
       const inputs = form.querySelectorAll("input[required]");
       let valid = true;
 
@@ -92,8 +98,6 @@
       const paymentSelected = form.querySelector('input[name="payment_method"]:checked');
       if (!paymentSelected) {
         valid = false;
-
-        // Можно визуально подсветить блок с оплатой
         document.querySelectorAll('input[name="payment_method"]').forEach(input => {
           input.classList.add("ring-2", "ring-red-500");
         });
@@ -111,17 +115,19 @@
           toast.classList.remove("opacity-0");
         }, 100);
 
-        // Скрыть уведомление и редирект через 2 секунды
+        // Уведомление и редирект
         setTimeout(() => {
           toast.classList.add("opacity-0");
           setTimeout(() => {
             window.location.href = "{% url 'general:index' %}";
-          }, 300); // небольшой таймаут для плавного скрытия
+          }, 300);
         }, 2000);
 
-        // Очистить форму
         form.reset();
-        cardFields.classList.add("hidden");
+
+        // Также скрываем анимационно поля карты
+        cardFields.classList.remove("max-h-[500px]", "opacity-100");
+        cardFields.classList.add("max-h-0", "opacity-0");
       }
     });
   });
