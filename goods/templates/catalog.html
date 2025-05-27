@@ -6,7 +6,7 @@
 {% block content %}
     <!-- Hero -->
     <div class="bg-gradient-to-r from-[#008080] to-[#00b3b3] w-full h-[200px] flex items-center justify-center mt-[64px]">
-        <h2 class="text-3xl font-semibold text-black">Добро пожаловать в the PianoDude !</h2>
+        <h2 class="text-3xl font-semibold text-black">Добро пожаловать в the PianoDude!</h2>
     </div>
 
     <section class="container mx-auto px-4 py-10 flex gap-6">
@@ -15,7 +15,7 @@
             <form method="get" id="filters-form">
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-1">Цена</label>
-                    <input type="range" min="29000" max="1000000" name="price" value="{{ request.GET.price|default:70000 }}" class="w-full text-[#008080]" onchange="this.form.submit()">
+                    <input type="range" min="29000" max="1000000" name="price" value="{{ request.GET.price|default:70000 }}" class="w-full teal-range" onchange="this.form.submit()">
                     <div class="flex justify-between text-sm text-gray-600">
                         <span>70000</span>
                         <span>1000000</span>

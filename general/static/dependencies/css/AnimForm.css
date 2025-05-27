@@ -12,3 +12,7 @@
 .animate-fade-in {
   animation: fade-in 0.8s ease-out forwards;
 }
+
+input[type="range"].teal-range {
+  accent-color: #008080; /* Работает в современных браузерах */
+}

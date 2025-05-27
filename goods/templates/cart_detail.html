@@ -9,38 +9,40 @@
   {% if cart %}
   <div class="flex flex-col gap-6">
     {% for item in cart %}
-    <div class="flex flex-col md:flex-row items-center md:items-start bg-white p-6 rounded-lg shadow-md gap-6 hover:shadow-lg transition-shadow">
-      <!-- Изображение товара -->
-      <div class="w-full md:w-32 flex-shrink-0 flex items-center justify-center">
-        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
-             class="rounded-md shadow w-28 h-28 object-contain bg-gray-100" />
-      </div>
-
-      <!-- Информация о товаре -->
-      <div class="flex-1 flex flex-col gap-2">
-        <h3 class="text-lg font-semibold text-gray-900">{{ item.product.name }}</h3>
-        <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-700">
-          <span><strong>Цвет:</strong> {{ item.product.color }}</span>
-          <span><strong>Производитель:</strong> {{ item.product.manufacturer }}</span>
-          <span><strong>Полифония:</strong> {{ item.product.polyphony }}</span>
-          <span><strong>Клавиш:</strong> {{ item.product.keys }}</span>
+    <a href="{% url 'catalog:product' item.product.slug %}">
+      <div class="flex flex-col md:flex-row items-center md:items-start bg-white p-6 rounded-lg shadow-md gap-6 hover:shadow-lg transition-shadow">
+        <!-- Изображение товара -->
+        <div class="w-full md:w-32 flex-shrink-0 flex items-center justify-center">
+          <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
+              class="rounded-md shadow w-28 h-28 object-contain bg-gray-100" />
         </div>
-        <div class="flex items-center gap-6 mt-2">
-          <span class="text-gray-600">Количество: <strong>{{ item.quantity }}</strong> шт.</span>
-          <span class="text-gray-600">Цена: <strong>{{ item.total_price }}₽</strong></span>
-        </div>
-      </div>
 
-      <!-- Кнопка удаления -->
-      <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post" class="mt-4 md:mt-0 md:ml-4">
-        {% csrf_token %}
-        <button type="submit"
-          class="flex items-center gap-1 px-3 py-2 rounded text-red-600 hover:bg-red-50 hover:text-red-800 transition">
-          {% lucide "trash-2" class="w-5 h-5" %}
-          <span class="hidden md:inline">Удалить</span>
-        </button>
-      </form>
-    </div>
+        <!-- Информация о товаре -->
+        <div class="flex-1 flex flex-col gap-2">
+          <h3 class="text-lg font-semibold text-gray-900">{{ item.product.name }}</h3>
+          <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-700">
+            <span><strong>Цвет:</strong> {{ item.product.color }}</span>
+            <span><strong>Производитель:</strong> {{ item.product.manufacturer }}</span>
+            <span><strong>Полифония:</strong> {{ item.product.polyphony }}</span>
+            <span><strong>Количество клавиш:</strong> {{ item.product.keys }}</span>
+          </div>
+          <div class="flex items-center gap-6 mt-2">
+            <span class="text-gray-600">Количество: <strong>{{ item.quantity }}</strong> шт.</span>
+            <span class="text-gray-600">Цена: <strong>{{ item.total_price }}₽</strong></span>
+          </div>
+        </div>
+
+        <!-- Кнопка удаления -->
+        <form action="{% url 'goods:remove_from_cart' item.product.id %}" method="post" class="mt-4 md:mt-0 md:ml-4">
+          {% csrf_token %}
+          <button type="submit"
+            class="flex items-center gap-1 px-3 py-2 rounded text-red-600 hover:bg-red-50 hover:text-red-800 transition">
+            {% lucide "trash-2" class="w-5 h-5" %}
+            <span class="hidden md:inline">Удалить</span>
+          </button>
+        </form>
+      </div>
+      </a>
     {% endfor %}
   </div>
 
@@ -48,7 +50,7 @@
   <div class="mt-10 flex flex-col items-end gap-4">
     <div class="text-xl font-bold text-gray-800">Итого: {{ cart.get_total_price }}₽</div>
     <a href="{% url 'goods:order_create' %}"
-       class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow hover:bg-blue-700 transition font-semibold">
+       class="inline-block bg-[#008080] text-white px-8 py-3 rounded-lg shadow hover:bg-[#006666] transition font-semibold">
       Оформить заказ
     </a>
   </div>
