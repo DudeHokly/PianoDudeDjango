@@ -21,9 +21,6 @@ def get_menu():
             ],
         },
         {
-            "label": {"name": "Услуги", "path": "/FakeReviews"},
-        },
-        {
             "label": {"name": "Контакты", "path": "/contacts"},
             "links": [
                 {"name": "Обратная связь", "path": "/contacts"},

@@ -7,13 +7,12 @@
         class="relative flex items-center justify-center h-screen bg-cover bg-center"
         style="background-image: url({% static 'dependencies/images/mainPage/mainPage.webp' %});"
         >
-        <div class="absolute text-center bg-white/50 text-black backdrop-blur-md opacity-95 shadow-lg p-5 rounded-3xl">
-          <h1 class="text-3xl font-bold mb-4">
+        <div class="absolute text-center bg-white/50 text-black backdrop-blur-md opacity-95 shadow-lg rounded-3xl 2xl:p-5 sm:p-4 mx-2">
+          <h1 class="text-3xl font-bold mb-4 ">
             Звучи со всей душой и раскрывай свой музыкальный потенциал!
           </h1>
           <a href="{% url 'goods:order_create' %}"
-            class="text-lg px-6 py-3  bg-[#008080] rounded-lg text-white hover:bg-yellow-400 transition"
-          >
+            class="text-lg px-6 py-3  bg-[#008080] rounded-lg text-white hover:bg-yellow-400 transition">
             Заказать инструмент
           </a>
         </div>
