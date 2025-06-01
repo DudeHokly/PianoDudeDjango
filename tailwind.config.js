@@ -5,6 +5,7 @@ module.exports = {
     "./**/templates/**/*.html",
     "./general/templates/**/*.html",
     "./general/**/*.html",
+    './static/**/*.js',
   ],
   theme: {
     extend: {},

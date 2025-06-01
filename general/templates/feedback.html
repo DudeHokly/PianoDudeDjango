@@ -14,22 +14,77 @@
             и стремимся сделать ваш опыт покупки максимально комфортным. Ваше
             мнение и обратная связь помогают нам становиться лучше!
           </p>
-      </div>
-      
-      <div class="mt-5">
-        <h2 class="text-2xl font-bold">Контакты</h2>
-        <div class="mt-2">
-          <p>📍 Адрес: г. Санкт-Петербург, ул. Примерная, д. 1</p>
-          <p>📞 Телефон: +7 (999) 999-999-9</p>
-          <p>📧 Email: info@example.com</p>
-          <div class="mt-2 flex space-x-4">
-            <a href="#" class="text-blue-600">VK</a>
-            <a href="#" class="text-pink-500">Telegram</a>
+        <h2 class="text-xl font-semibold mb-4">Обратная связь</h2>
+            <textarea id="feedback-message" rows="4" placeholder="Опишите вашу проблему, а мы попытаемся ее решить" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]"></textarea>
+
+            <!-- Кнопка, скрытая по умолчанию -->
+            <div id="send-feedback-container" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+              <button id="send-feedback" class="mt-4 bg-[#008080] text-white px-6 py-3 rounded-full hover:bg-[#006666] transition-colors text-lg font-medium">
+                Отправить сообщение
+              </button>
+            </div>
           </div>
-        </div>
-      </div> 
+
+          <!-- Уведомление -->
+          <a id="feedback-toast" href="{% url 'general:index' %}" class="hidden fixed bottom-6 right-6 bg-[#008080] text-white px-4 py-3 rounded-lg shadow-lg transition-all duration-500 z-50">
+            Ваш запрос бедет рассмотрен в самое ближайшее время!
+          </a>
+          <div class="mt-5">
+            <h2 class="text-2xl font-bold">Контакты</h2>
+            <div class="mt-2">
+              <p>📍 Адрес: г. Санкт-Петербург, ул. Примерная, д. 1</p>
+              <p>📞 Телефон: +7 (999) 999-999-9</p>
+              <p>📧 Email: info@example.com</p>
+              <div class="mt-2 flex space-x-4">
+                <a href="#" class="text-blue-600">VK</a>
+                <a href="#" class="text-pink-500">Telegram</a>
+              </div>
+            </div>
+          </div> 
+      </div>
     </div>
   </section>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const textarea = document.getElementById("feedback-message");
+      const sendButton = document.getElementById("send-feedback");
+      const sendButtonContainer = document.getElementById("send-feedback-container");
+      const toast = document.getElementById("feedback-toast");
+
+      textarea.addEventListener("input", () => {
+        if (textarea.value.trim().length >= 20) {
+          sendButtonContainer.classList.remove("max-h-0", "opacity-0");
+          sendButtonContainer.classList.add("max-h-[80px]", "opacity-100");
+        } else {
+          sendButtonContainer.classList.remove("max-h-[80px]", "opacity-100");
+          sendButtonContainer.classList.add("max-h-0", "opacity-0");
+        }
+      });
+
+      // Клик по кнопке "Отправить сообщение"
+      sendButton.addEventListener("click", () => {
+        // Показ уведомления
+        toast.classList.remove("hidden");
+        toast.classList.add("opacity-0");
+
+        setTimeout(() => {
+          toast.classList.remove("opacity-0");
+        }, 100);
+
+        // Скрытие и редирект
+        setTimeout(() => {
+          toast.classList.add("opacity-0");
+          setTimeout(() => {
+            window.location.href = "{% url 'general:index' %}";
+          }, 300);
+        }, 2000);
+
+        // Очистка поля
+        textarea.value = '';
+        sendButton.classList.add("hidden");
+      });
+    });
+    </script>
 {% endblock %}
 
 

@@ -16,3 +16,5 @@
 input[type="range"].teal-range {
   accent-color: #008080; /* Работает в современных браузерах */
 }
+
+[x-cloak] { display: none !important; }
