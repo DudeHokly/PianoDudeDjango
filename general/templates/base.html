@@ -12,11 +12,10 @@
     <link rel="stylesheet" href="{% static "dependencies/css/AnimForm.css" %}">   
     <link rel="stylesheet" href="{% static "dependencies/css/animNewsLenta.css" %}">   
     <link rel="stylesheet" href="{% static "dependencies/css/forOrderForm.css" %}">  
+    <link rel="stylesheet" href="{% static "dependencies/css/adaptiveResposive.css" %}">  
   </head>
   <body class="font-roboto">
     <div class="mx-auto font-sans bg-gray-300" style="font-family: 'Roboto', sans-serif;">
-      
-      {% comment %} Header {% endcomment %}
       <!-- Header -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all bg-white/50 backdrop-blur-md text-black py-3 shadow-none">
       <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -24,15 +23,6 @@
           {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
           <h1 class="text-3xl">PianoDude</h1>
         </a>
-
-        <!-- Бургер-кнопка -->
-        <button id="burger-btn" class="md:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Открыть меню">
-          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300"></span>
-          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300"></span>
-          <span class="block w-7 h-0.5 bg-black transition-all duration-300"></span>
-        </button>
-
-        <!-- Основное меню (для md и выше) -->
         <nav class="block">
           <ul class="flex space-x-8 text-[17px]">
             {% if not user.is_authenticated %}
@@ -48,7 +38,23 @@
             {% endif %}
 
             {% for item in menu_items %}
-              <li><a href="{{ item.label.path }}" class="hover:text-[#008080]">{{ item.label.name }}</a></li>
+              <li class="relative group">
+                <a href="{{ item.label.path }}" class="hover:text-[#008080] inline-block">
+                  {{ item.label.name }}
+                </a>
+
+                {% if item.links %}
+                  <ul class="absolute left-0 mt-1 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out min-w-[180px] z-50">
+                    {% for link in item.links %}
+                      <li>
+                        <a href="{{ link.path }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-[#008080]">
+                          {{ link.name }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
             {% endfor %}
 
             {% if user.is_authenticated %}
@@ -66,49 +72,15 @@
           </ul>
         </nav>
       </div>
-
-      <!-- Мобильное меню (показывается при open = true) -->
-      <nav id="mobile-menu" class="hidden bg-white shadow-lg px-6 pb-6 pt-4">
-        <ul class="flex flex-col space-y-4 text-lg">
-          {% if not user.is_authenticated %}
-            <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
-            <li><a href="{% url 'general:register' %}" class="hover:text-[#008080]">Регистрация</a></li>
-          {% else %}
-            <li><a href="{% url 'general:logout' %}" class="hover:text-[#008080]">Выход</a></li>
-            {% if user.is_superuser %}
-              <li><a href="{% url 'general:panel_admin' %}" class="hover:text-[#008080]">Панель админа</a></li>
-            {% else %}
-              <li><a href="{% url 'general:account' %}" class="hover:text-[#008080]">Личный кабинет</a></li>
-            {% endif %}
-          {% endif %}
-
-          {% for item in menu_items %}
-            <li><a href="{{ item.label.path }}" class="hover:text-[#008080]">{{ item.label.name }}</a></li>
-          {% endfor %}
-
-          {% if user.is_authenticated %}
-            <li>
-              <a href="{% url 'goods:cart_detail' %}" class="hover:text-[#008080]">
-                {% lucide 'shopping-cart' size=40 class="h-6 w-6" %}
-                {% if cart_item_count > 0 %}
-                  <span class="ml-1 inline-block bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                    {{ cart_item_count }}
-                  </span>
-                {% endif %}
-              </a>
-            </li>
-          {% endif %}
-        </ul>
-      </nav>
     </header>
 
       <main class="#">{% block content %}{% endblock %}</main>
 
       {% comment %} Footer {% endcomment %}
       <footer class="bg-gradient-to-r from-[#008080] to-[#00b3b3] py-12 px-6 text-white">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-6">
+        <div class="max-w-6xl mx-auto flex flex-row justify-between gap-6">
           <!-- Левая часть -->
-          <div class="w-full md:w-1/3 space-y-6">
+          <div class="w-1/3 space-y-6">
             <div class="flex items-center space-x-2">
               <i class="w-6 h-6">
                 {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
@@ -139,7 +111,7 @@
           </div>
 
           <!-- Правая часть: ссылки -->
-          <div class="w-full md:w-2/3 flex flex-wrap justify-between gap-6">
+          <div class="w-2/3 flex flex-wrap justify-between gap-6">
             {% for category, links in footer_links.items %}
               <div class="space-y-4 min-w-[140px]">
                 <h2 class="text-lg font-semibold">{{ category }}</h2>
@@ -159,5 +131,15 @@
     <script src="{% static 'dependencies/js/headerMove.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'dependencies/js/swiper-init.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const burgerBtn = document.getElementById('burger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        burgerBtn.addEventListener('click', function () {
+          mobileMenu.classList.toggle('open');
+        });
+      });
+    </script>
   </body>
 </html>
