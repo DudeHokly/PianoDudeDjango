@@ -4,6 +4,7 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Piano Dude{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
     <!-- Подключение Swiper из CDN -->
@@ -23,7 +24,7 @@
           {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
           <h1 class="text-3xl">PianoDude</h1>
         </a>
-        <nav class="block">
+        <nav id="desktop-menu" class="block">
           <ul class="flex space-x-8 text-[17px]">
             {% if not user.is_authenticated %}
               <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
@@ -71,6 +72,47 @@
             {% endif %}
           </ul>
         </nav>
+        <!-- Бургер-кнопка -->
+        <button id="burger-button">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <!-- Мобильное меню -->
+        <div id="mobile-menu">
+          <nav>
+            <ul class="flex flex-col space-y-4 px-6 py-4 text-[17px]">
+              {% if not user.is_authenticated %}
+                <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
+                <li><a href="{% url 'general:register' %}" class="hover:text-[#008080]">Регистрация</a></li>
+              {% else %}
+                <li><a href="{% url 'general:logout' %}" class="hover:text-[#008080]">Выход</a></li>
+                {% if user.is_superuser %}
+                  <li><a href="{% url 'general:panel_admin' %}" class="hover:text-[#008080]">Панель админа</a></li>
+                {% else %}
+                  <li><a href="{% url 'general:account' %}" class="hover:text-[#008080]">Личный кабинет</a></li>
+                {% endif %}
+              {% endif %}
+
+              {% for item in menu_items %}
+                <li><a href="{{ item.label.path }}" class="hover:text-[#008080]">{{ item.label.name }}</a></li>
+              {% endfor %}
+
+              {% if user.is_authenticated %}
+                <li>
+                  <a href="{% url 'goods:cart_detail' %}" class="hover:text-[#008080]">
+                    {% lucide 'shopping-cart' size=40 class="h-6 w-6 inline" %}
+                    {% if cart_item_count > 0 %}
+                      <span class="ml-1 bg-[#008080] text-white text-xs px-2 py-0.5 rounded-full">
+                        {{ cart_item_count }}
+                      </span>
+                    {% endif %}
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
 
@@ -132,12 +174,13 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'dependencies/js/swiper-init.js' %}"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const burgerBtn = document.getElementById('burger-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+      document.addEventListener("DOMContentLoaded", function () {
+        const burger = document.getElementById("burger-button");
+        const menu = document.getElementById("mobile-menu");
 
-        burgerBtn.addEventListener('click', function () {
-          mobileMenu.classList.toggle('open');
+        burger.addEventListener("click", function () {
+          burger.classList.toggle("active");
+          menu.classList.toggle("open");
         });
       });
     </script>
