@@ -18,22 +18,22 @@
       
       {% comment %} Header {% endcomment %}
       <!-- Header -->
-    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all bg-white/50 backdrop-blur-md text-black py-3 shadow-none" x-data="{ open: false }">
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all bg-white/50 backdrop-blur-md text-black py-3 shadow-none">
       <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <a href="/" class="flex items-center hover:text-[#008080]">
           {% lucide 'piano' size=40 class="h-6 w-6 mr-2" %}
           <h1 class="text-3xl">PianoDude</h1>
         </a>
 
-        <!-- Бургер-меню -->
-        <button @click="open = !open" class="md:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Открыть меню">
-          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300" :class="{ 'rotate-45 translate-y-2': open }"></span>
-          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300" :class="{ 'opacity-0': open }"></span>
-          <span class="block w-7 h-0.5 bg-black transition-all duration-300" :class="{ '-rotate-45 -translate-y-2': open }"></span>
+        <!-- Бургер-кнопка -->
+        <button id="burger-btn" class="md:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Открыть меню">
+          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300"></span>
+          <span class="block w-7 h-0.5 bg-black mb-1 transition-all duration-300"></span>
+          <span class="block w-7 h-0.5 bg-black transition-all duration-300"></span>
         </button>
 
         <!-- Основное меню (для md и выше) -->
-        <nav class="hidden md:block">
+        <nav class="block">
           <ul class="flex space-x-8 text-[17px]">
             {% if not user.is_authenticated %}
               <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
@@ -68,8 +68,8 @@
       </div>
 
       <!-- Мобильное меню (показывается при open = true) -->
-      <nav class="md:hidden" x-show="open" x-transition x-cloak>
-        <ul class="flex flex-col space-y-4 px-6 pb-6 text-lg">
+      <nav id="mobile-menu" class="hidden bg-white shadow-lg px-6 pb-6 pt-4">
+        <ul class="flex flex-col space-y-4 text-lg">
           {% if not user.is_authenticated %}
             <li><a href="{% url 'general:login' %}" class="hover:text-[#008080]">Вход</a></li>
             <li><a href="{% url 'general:register' %}" class="hover:text-[#008080]">Регистрация</a></li>
@@ -159,7 +159,5 @@
     <script src="{% static 'dependencies/js/headerMove.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'dependencies/js/swiper-init.js' %}"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/imask"></script>
   </body>
 </html>

@@ -53,7 +53,6 @@ def get_footer_links():
     }
 
 
-# Create your views here.
 def catalog(request):
     sort = request.GET.get("sort", "")
     price = request.GET.get("price", "")

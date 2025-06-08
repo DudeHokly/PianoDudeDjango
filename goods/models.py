@@ -48,16 +48,11 @@ class Product(models.Model):
     metronome = models.BooleanField(default=True)
     recorder = models.BooleanField(default=False)
     bluetooth = models.BooleanField(default=False)
-
     tones = models.CharField(max_length=50, default="1")
-
     hammer_keyboard = models.BooleanField(default=False)
-
     power = models.CharField(max_length=100, default="От сети 220В")
     warranty = models.CharField(max_length=50, default="12 месяцев")
-
     sound_effects = models.CharField(max_length=255, default="Reverb")
-
     key_weight = models.CharField(
         max_length=50,
         choices=[

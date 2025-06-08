@@ -1,7 +1,7 @@
 {% load static %}
 {% load lucide %}
-<div class="bg-gray-100  shadow-md rounded-lg p-4 flex-1">
-    <form method="get" class="flex items-center justify-between gap-4 mb-6">
+<div class="bg-gray-100 shadow-md rounded-lg p-6 flex-1">
+    <form method="get" class="flex items-center justify-between gap-4 mb-8">
         <h2 class="text-2xl font-bold">Каталог пианино</h2>
         <div class="relative">
             <button type="button"
@@ -43,31 +43,33 @@
             </ul>
         </div>
     </form>
-
     <!-- Сетка карточек товаров -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {% for product in products %}
-            <div class="cursor-pointer group transform transition duration-500 hover:scale-105 border-2 border-teal-600 rounded-xl p-5 bg-white flex flex-col justify-between">
-                <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
+            <div class="group transform transition duration-500 hover:scale-105 border-2 border-teal-600 rounded-xl p-5 bg-white flex flex-col justify-between">
+                <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600 block">
                     <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-48 object-contain mb-3 bg-white" />
                     <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
                     {% if product.old_price %}
                         <p class="text-sm line-through text-gray-500">{{ product.old_price }} ₽</p>
                     {% endif %}
                     <p class="text-lg font-bold text-teal-700">{{ product.price }} ₽</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
-                            {% lucide "move-right" class="w-5 h-5" %}
-                        </a>
-                        <button type="button" data-product-id="{{ product.id }}" class="add-to-cart-btn bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700">В корзину</button>
-                    </div>
                 </a>
+                <div class="mt-4 flex justify-between items-center">
+                    <a href="{% url 'catalog:product' product.slug %}" class="hover:text-teal-600">
+                        {% lucide "move-right" class="w-5 h-5" %}
+                    </a>
+                    <button type="button"
+                            data-product-id="{{ product.id }}"
+                            class="add-to-cart-btn bg-teal-600 text-white text-sm px-3 py-1 rounded hover:bg-teal-700 transition">
+                        В корзину
+                    </button>
+                </div>
             </div>
         {% empty %}
             <p class="col-span-full text-center text-gray-500">Нет товаров для отображения.</p>
         {% endfor %}
     </div>
-
     <!-- Пагинация -->
     <div class="mt-8 flex justify-center">
         <nav class="bg-white rounded-xl shadow px-4 py-2 flex gap-2 items-center">
@@ -81,7 +83,6 @@
                     Назад
                 </span>
             {% endif %}
-
             {% for num in products.paginator.page_range %}
                 {% if products.number == num %}
                     <span class="px-3 py-2 text-sm font-semibold rounded-lg border border-teal-600 bg-teal-100 text-teal-800">
@@ -94,7 +95,6 @@
                     </a>
                 {% endif %}
             {% endfor %}
-
             {% if products.has_next %}
                 <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
                    class="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
@@ -112,7 +112,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".add-to-cart-btn").forEach(button => {
             button.addEventListener("click", function () {
-                const productId = this.dataset.productId;
+                const btn = this;
+                const productId = btn.dataset.productId;
 
                 fetch("{% url 'catalog:add_to_cart' %}", {
                     method: "POST",
@@ -126,15 +127,26 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert("Товар добавлен в корзину!");
+                        btn.innerHTML = `
+                            <span class="flex items-center gap-1 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                В корзине
+                            </span>
+                        `;
+                        btn.disabled = true;
+                        btn.classList.remove("bg-teal-600", "hover:bg-teal-700");
+                        btn.classList.add("bg-gray-400", "cursor-not-allowed");
                     } else {
-                        alert("Ошибка добавления.");
+                        alert("Ошибка при добавлении в корзину");
                     }
-                });
+                })
+                .catch(() => alert("Ошибка при отправке запроса"));
             });
         });
     });
-    // Script for collapsible filters
+
     function toggleFilter(index) {
         const content = document.getElementById(`filter-content-${index}`);
         const icon = document.getElementById(`filter-icon-${index}`);
@@ -147,87 +159,4 @@
             if (icon) icon.style.transform = "rotate(180deg)";
         }
     }
-    document.addEventListener("DOMContentLoaded", function () {
-        const catalogContainer = document.querySelector("catalog-container");
-        const filtersForm = document.getElementById("filters-form");
-
-        // Обновление контента каталога
-        async function updateCatalog(url) {
-            try {
-                const response = await fetch(url, {
-                    headers: { "X-Requested-With": "XMLHttpRequest" }
-                });
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, "text/html");
-
-                const newCatalog = doc.querySelector("catalog-container");
-                if (newCatalog) {
-                    catalogContainer.innerHTML = newCatalog.innerHTML;
-                    attachPaginationLinks();
-                    attachSortLinks();
-                }
-            } catch (error) {
-                console.error("Ошибка при обновлении каталога:", error);
-            }
-        }
-
-        // Подключение событий к пагинации
-        function attachPaginationLinks() {
-            catalogContainer.querySelectorAll("a[href*='?page=']").forEach(link => {
-                link.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    updateCatalog(this.href);
-                    window.history.pushState({}, "", this.href);
-                });
-            });
-        }
-
-        // Подключение событий к сортировке
-        function attachSortLinks() {
-            document.querySelectorAll("#filter-content-sort a").forEach(link => {
-                link.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    updateCatalog(this.href);
-                    window.history.pushState({}, "", this.href);
-                });
-            });
-        }
-
-        // Обработка отправки формы фильтрации
-        filtersForm.addEventListener("change", function (e) {
-            const formData = new FormData(filtersForm);
-            const params = new URLSearchParams();
-
-            for (let pair of formData.entries()) {
-                params.append(pair[0], pair[1]);
-            }
-
-            const url = `${window.location.pathname}?${params.toString()}`;
-            updateCatalog(url);
-            window.history.pushState({}, "", url);
-        });
-
-        // Повторное подключение событий после загрузки страницы
-        attachPaginationLinks();
-        attachSortLinks();
-
-        // Поддержка навигации назад/вперёд в истории браузера
-        window.addEventListener("popstate", () => {
-            updateCatalog(location.href);
-        });
-        document.addEventListener("click", function (event) {
-            const sortButton = document.getElementById("filter-btn-sort");
-            const sortContent = document.getElementById("filter-content-sort");
-
-            const isClickInside = sortButton.contains(event.target) || sortContent.contains(event.target);
-            const isOpen = sortContent.style.maxHeight && sortContent.style.maxHeight !== "0px";
-
-            if (!isClickInside && isOpen) {
-                sortContent.style.maxHeight = "0px";
-                const icon = document.getElementById("filter-icon-sort");
-                if (icon) icon.style.transform = "rotate(0deg)";
-            }
-        });
-    });
 </script>
