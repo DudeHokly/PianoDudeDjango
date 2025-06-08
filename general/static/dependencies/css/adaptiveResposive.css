@@ -58,3 +58,488 @@
       display: flex;
     }
   }
+  /* === Главный экран (секция с фоном) === */
+@media (max-width: 768px) {
+  section.relative.flex.items-center.justify-center.h-screen {
+    height: 80vh;
+    background-position: center;
+    background-size: cover;
+  }
+
+  section.relative .text-center {
+    padding: 1rem;
+    font-size: 16px;
+  }
+
+  section.relative h1 {
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+
+  section.relative a {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* === Слоганы === */
+@media (max-width: 768px) {
+  section.flex.flex-wrap.justify-center.gap-4 {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  section.flex .max-w-md {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  section.flex .max-w-md h3 {
+    font-size: 1rem;
+  }
+
+  section.flex .max-w-md p {
+    font-size: 0.875rem;
+  }
+}
+
+/* === Рекламный блок === */
+@media (max-width: 768px) {
+  section.relative.w-full.h-\[700px\] {
+    height: auto;
+    padding: 2rem 1rem;
+    background-position: center;
+    background-size: cover;
+  }
+
+  section.relative .max-w-\[700px\] {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  section.relative h2 {
+    font-size: 1.25rem;
+  }
+
+  section.relative p {
+    font-size: 0.95rem;
+  }
+
+  section.relative .text-xl {
+    font-size: 1rem;
+  }
+
+  section.relative .text-md {
+    font-size: 0.875rem;
+  }
+}
+
+/* === Слайдер Swiper === */
+@media (max-width: 768px) {
+  .swiper.mySwiper {
+    height: 300px;
+  }
+
+  .swiper-slide img {
+    object-fit: cover;
+  }
+
+  .swiper-pagination {
+    bottom: 8px !important;
+  }
+}
+
+/* === Новостная лента === */
+@media (max-width: 768px) {
+  #news-scroll {
+    height: 240px;
+  }
+
+  .news-item {
+    width: 280px !important;
+    height: 240px !important;
+  }
+
+  .news-item h3 {
+    font-size: 1rem;
+  }
+
+  .news-item p {
+    font-size: 0.8rem;
+  }
+
+  #modal-background {
+    height: 90vh;
+    width: 90vw;
+    background-size: cover;
+    background-position: center;
+  }
+
+  #modal .max-w-\[70\%\] {
+    max-width: 95% !important;
+    padding: 1rem !important;
+  }
+
+  #modal .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  #modal .text-sm {
+    font-size: 0.875rem;
+  }
+
+  #modal-close {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+/* === Адаптивность футера === */
+@media (max-width: 768px) {
+  footer {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  footer .flex.flex-row.justify-between {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 2rem !important;
+  }
+
+  footer .w-1\/3,
+  footer .w-2\/3 {
+    width: 100% !important;
+  }
+
+  footer .w-2\/3.flex.flex-wrap.justify-between {
+    justify-content: center !important;
+  }
+
+  footer .min-w-\[140px\] {
+    min-width: auto !important;
+  }
+
+  footer .text-lg {
+    font-size: 1rem !important;
+  }
+
+  footer .text-sm {
+    font-size: 0.875rem !important;
+  }
+
+  footer .text-3xl {
+    font-size: 1.5rem !important;
+  }
+
+  footer .space-y-6 {
+    gap: 1.5rem;
+  }
+
+  footer .space-y-4 {
+    gap: 1rem;
+  }
+
+  footer .space-x-3 {
+    justify-content: center;
+  }
+
+  footer .items-center {
+    justify-content: center !important;
+  }
+}/* === Каталог: обёртка и фильтры === */
+@media (max-width: 768px) {
+  section.container.mx-auto.px-4.py-10.flex {
+    flex-direction: column !important;
+    gap: 2rem;
+  }
+
+  aside.w-64 {
+    width: 100% !important;
+  }
+
+  aside.w-64 h2 {
+    font-size: 1.5rem !important;
+  }
+
+  #filters-form label,
+  #filters-form input[type="checkbox"],
+  #filters-form input[type="range"] {
+    font-size: 0.95rem !important;
+  }
+
+  #filters-form button {
+    font-size: 0.95rem;
+  }
+}
+/* === Сортировка (в каталоге) === */
+@media (max-width: 768px) {
+  form.flex.items-center.justify-between {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+
+  form.flex h2 {
+    font-size: 1.5rem !important;
+    text-align: center;
+  }
+
+  form.flex .relative {
+    width: 100% !important;
+  }
+
+  #filter-content-sort {
+    right: auto !important;
+    left: 0 !important;
+    width: 100% !important;
+  }
+}
+/* === Сетка карточек товаров === */
+@media (max-width: 768px) {
+  .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  .group.p-5 {
+    padding: 1rem !important;
+  }
+
+  .group img {
+    height: auto !important;
+    max-height: 200px !important;
+  }
+
+  .group h3 {
+    font-size: 1rem !important;
+  }
+
+  .group p {
+    font-size: 0.9rem !important;
+  }
+
+  .group .text-lg {
+    font-size: 1rem !important;
+  }
+}
+/* === Пагинация === */
+@media (max-width: 768px) {
+  .mt-8.flex.justify-center nav {
+    flex-wrap: wrap;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+  }
+}
+/* === Страница товара === */
+@media (max-width: 768px) {
+  section.container.mx-auto.px-4.py-10.mt-\[64px\] {
+    padding: 2rem 1rem !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .space-y-6 h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .space-y-6 h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .space-y-6 ul li {
+    font-size: 0.9rem !important;
+    flex-wrap: wrap;
+  }
+
+  .space-y-6 li svg {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  .transition-transform img {
+    max-height: 250px;
+    object-fit: contain;
+  }
+}
+/* ====== КОРЗИНА ====== */
+@media (max-width: 1200px) {
+  section.pt-24 {
+    padding-bottom: 1rem;
+  }
+}
+@media (max-width: 1024px) {
+  section.pt-24 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .cart-summary {
+    align-items: center;
+  }
+}
+@media (max-width: 768px) {
+  .cart-summary {
+    text-align: center;
+  }
+  .cart-summary a {
+    width: 100%;
+    text-align: center;
+  }
+  .cart-summary .text-xl {
+    font-size: 1.125rem;
+  }
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .cart-item form {
+    margin-left: 0 !important;
+    margin-top: 1rem;
+  }
+}
+/* ====== ОФОРМЛЕНИЕ ЗАКАЗА ====== */
+@media (max-width: 768px) {
+  #order-form .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+  #order-form {
+    padding: 1.5rem;
+  }
+  #order-form .text-right {
+    text-align: center;
+  }
+  #order-form .confirm-button {
+    width: 100%;
+  }
+}
+/* ====== СТРАНИЦА АККАУНТА ====== */
+@media (max-width: 1024px) {
+  section.grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+  .account-avatar {
+    width: 96px;
+    height: 96px;
+  }
+  .account-btns a {
+    width: 100%;
+    text-align: center;
+  }
+}
+@media (max-width: 768px) {
+  .cart-scroll .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+  .cart-scroll img {
+    height: auto;
+    width: 100%;
+  }
+  .cart-scroll .text-lg {
+    font-size: 1rem;
+  }
+}
+/* ====== АВТОРИЗАЦИЯ (ЛОГИН) ====== */
+@media (max-width: 768px) {
+  .login-form {
+    padding: 1.5rem !important;
+    border-radius: 1rem !important;
+  }
+}
+/* ====== РЕГИСТРАЦИЯ ====== */
+@media (max-width: 768px) {
+  .register-form {
+    padding: 1.5rem !important;
+    border-radius: 1rem !important;
+  }
+}
+/* ====== АДМИН-ПАНЕЛЬ ====== */
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 1rem !important;
+  }
+  .admin-panel a {
+    padding: 1rem !important;
+    font-size: 0.95rem !important;
+  }
+}
+/* ====== АДМИН-РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ====== */
+@media (max-width: 768px) {
+  .edit-user-form {
+    padding: 1.5rem !important;
+  }
+  .edit-user-form .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* ====== КОНТАКТЫ ====== */
+@media (max-width: 1300px) {
+  .main-container {
+    max-width: 900px;
+    padding: 30px !important;
+  }
+}
+@media (max-width: 950px) {
+  .main-container {
+    max-width: 98vw;
+    padding: 10px !important;
+    border-radius: 1.5rem;
+  }
+  .lowDude {
+    margin: 30px;
+  }
+}
+@media (max-width: 600px) {
+  .main-container {
+    padding: 8px !important;
+    border-radius: 1rem;
+  }
+  .team-grid img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .lowDude h2 {
+    font-size: 1.1rem !important;
+  }
+  .lowDude h2.text-3xl {
+    font-size: 1.3rem !important;
+  }
+}
+/* ====== FEDBACK ====== */
+@media (max-width: 1300px) {
+  .main-container {
+    max-width: 900px;
+    padding: 30px !important;
+  }
+}
+@media (max-width: 950px) {
+  .main-container {
+    max-width: 85vw;
+    padding: 10px !important;
+    border-radius: 1.5rem;
+  }
+}
+@media (max-width: 860px) {
+  .main-container {
+    max-width: 90vw;
+  }
+}
+@media (max-width: 650px) {
+  .main-container {
+    max-width: 95vw;
+    padding: 8px !important;
+    border-radius: 1rem;
+  }
+
+}
+
+
+
+
+
+
+
