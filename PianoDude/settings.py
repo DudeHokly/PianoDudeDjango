@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "general",
-    "django_browser_reload",
     "lucide",
     "goods",
 ]
