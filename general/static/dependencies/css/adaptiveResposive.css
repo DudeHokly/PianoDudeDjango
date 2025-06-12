@@ -42,7 +42,7 @@
 }
 
 #mobile-menu.open {
-  max-height: 500px; /* Достаточно, чтобы вместить весь контент */
+  max-height: 500px; 
   opacity: 1;
   transform: translateY(0);
 }

@@ -34,19 +34,20 @@
         <input name="card_number" type="text" placeholder="Номер карты" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
         <input name="card_expiry" type="text" placeholder="MM/YY" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
         <input name="card_cvc" type="text" placeholder="CVC" class="p-3 rounded-lg border border-gray-300 focus:ring-[#008080] focus:outline-none">
+      </div> <!-- ✅ Добавили закрывающий тег -->
+      <!-- Кнопка -->
+      <div class="text-right">
+        <button type="submit" class="confirm-button bg-[#008080] text-white px-6 py-3 rounded-full hover:bg-[#006666] transition-colors text-lg font-medium">
+          Подтвердить заказ
+        </button>
       </div>
-    <!-- Кнопка -->
-    <div class="text-right">
-      <button type="submit" class="confirm-button bg-[#008080] text-white px-6 py-3 rounded-full hover:bg-[#006666] transition-colors text-lg font-medium">
-        Подтвердить заказ
-      </button>
-    </div>
   </form>
   <!-- Уведомление -->
   <a id="toast" href={% url "general:index" %} class="hidden fixed bottom-6 right-6 bg-[#008080] text-white px-4 py-3 rounded-lg shadow-lg transition-all duration-500 z-50">
     Заказ успешно оформлен!
   </a>
 </section>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("order-form");
